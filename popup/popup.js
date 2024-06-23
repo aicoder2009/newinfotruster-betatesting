@@ -62,8 +62,17 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 */
     // Send user's input to background script when the send button is clicked
-    sendBtn.addEventListener('click', function () {
-        const userMessage = 'tell me a joke';
+    sendBtn.addEventListener('click', async function () {
+        var url;
+        const tabs = await chrome.tabs.query({
+            active: true, 
+            lastFocusedWindow: true
+        });
+        const tab = tabs[0];
+        console.log(tab.url);
+        alert(tab.url);
+        url = tab.url;
+        const userMessage = 'Summarize the policies specified in the website in plain english within 4-5 bullet points (no markdown formatting) : ' + url;
         if (userMessage !== '') {
             sendMessage(userMessage);
            // userInput.value = ''; // Clear the input field
