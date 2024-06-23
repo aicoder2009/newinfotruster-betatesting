@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
             hideAssistanInfo();
         }
         // Display the user's message in the chat
-        displayMessage('user', userMessage);
+       // displayMessage('user', userMessage);
     }
 
     // Function to display messages in the chat
