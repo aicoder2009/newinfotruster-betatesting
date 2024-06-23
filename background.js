@@ -16,13 +16,19 @@ chrome.runtime.onInstalled.addListener(function () {
 
 // Listen for messages from the popup script
 chrome.runtime.onMessage.addListener(async function (message, sender, sendResponse) {
+    console.log("I am at onMessage");
+    console.log("user input message="+message);
+    
 
-    if (message.userInput) {
+
+    if (message) {
 
         // Get the API key from local storage
         const { apiKey } = await getStorageData(["apiKey"]);
+        console.log("api modeapiKey="+apiKey);
         // Get the model from local storage
         const { apiModel } = await getStorageData(["apiModel"]);
+        console.log("api apiModel="+apiModel);
 
         // get the chat history from local storage
         const result = await getStorageData(["chatHistory"]);
@@ -36,11 +42,12 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
         }
 
         // save user's message to message array
-        chatHistory.push({ role: "user", content: message.userInput });
+        chatHistory.push({ role: "user", content: message });
 
         if (apiModel === "dall-e-3") {
+            console.log("I am in dall-e3");
             // Send the user's message to the OpenAI API
-            const response = await fetchImage(message.userInput, apiKey, apiModel);
+            const response = await fetchImage(message, apiKey, apiModel);
 
             if (response && response.data && response.data.length > 0) {
                 // Get the image URL
@@ -59,6 +66,7 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
             }
             return true; // Enable response callback
         } else {
+            console.log("I am not in dall-e3");
             // Send the user's message to the OpenAI API
             const response = await fetchChatCompletion(chatHistory, apiKey, apiModel);
 
@@ -87,7 +95,9 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
 
 // Fetch data from the OpenAI Chat Completion API
 async function fetchChatCompletion(messages, apiKey, apiModel) {
+    console.log("I am at fetchChatCompletion ");
     try {
+        console.log("I am before calling openAPI");
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {

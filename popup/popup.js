@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     const chatMessages = document.getElementById('chat-messages');
-    const userInput = document.getElementById('user-input');
-    const sendBtn = document.getElementById('send-btn');
+    //const userInput = document.getElementById('user-input');
+    //const sendBtn = document.getElementById('send-btn');
+    const userInput = document.getElementById('summarize');
+    const sendBtn = document.getElementById('summarize');
     const clearChatBtn = document.getElementById('clear-chat-btn');
 
     // If the user has not entered an API key, open the options page
@@ -12,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Fetch chat history from local storage and display it
+    
     chrome.storage.local.get(['chatHistory'], function (result) {
         const chatHistory = result.chatHistory || [];
 
@@ -26,18 +29,18 @@ document.addEventListener('DOMContentLoaded', function () {
             displayAssistanInfo();
         }
 
-        checkClearChatBtn();
+        //checkClearChatBtn();
     });
 
     // focus on the input field
-    userInput.focus();
+    //userInput.focus();
 
     // disable the send button by default
-    sendBtn.disabled = true;
+    //sendBtn.disabled = true;
 
-    // disable the send button if the input field is empty
+    /* // disable the send button if the input field is empty
     userInput.addEventListener('keyup', function () {
-        const userMessage = userInput.value.trim();
+        const userMessage = "tell me a joke";
         sendBtn.disabled = userMessage === '';
     });
 
@@ -47,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
             sendBtn.click();
         }
-    });
+    }); 
 
     // Auto-resize the input field based on the content
     userInput.addEventListener('input', function () {
@@ -57,22 +60,22 @@ document.addEventListener('DOMContentLoaded', function () {
         // Enable scrolling if the content is too long
         this.style.overflowY = this.scrollHeight > 100 ? 'scroll' : 'auto';
     });
-
+*/
     // Send user's input to background script when the send button is clicked
     sendBtn.addEventListener('click', function () {
-        const userMessage = userInput.value.trim();
+        const userMessage = 'tell me a joke';
         if (userMessage !== '') {
             sendMessage(userMessage);
-            userInput.value = ''; // Clear the input field
+           // userInput.value = ''; // Clear the input field
 
             // disable the send button
-            sendBtn.disabled = true;
+            //sendBtn.disabled = true;
             // remove the icon from the send button and add the loading indicator
             sendBtn.innerHTML = '<i class="fa fa-spinner fa-pulse"></i>';
 
             // disable input field while the assistant is typing
-            userInput.disabled = true;
-            userInput.style.height = 'auto'; // Reset the height
+           // userInput.disabled = true;
+            //userInput.style.height = 'auto'; // Reset the height
 
             // scroll to bottom of chat-messages div
             chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -98,14 +101,15 @@ document.addEventListener('DOMContentLoaded', function () {
         sendBtn.innerHTML = '<i class="fa fa-paper-plane"></i>';
 
         // Enable the input field again
-        userInput.disabled = false;
+        //userInput.disabled = false;
     });
 
     // Function to send user's input to the background script and display it in the chat
     function sendMessage(userMessage) {
-        const message = { userInput: userMessage };
+        alert("I am inside send method" + userMessage);
+        //const userMessage = userMessage ;
         // Send the user's message to the background script
-        chrome.runtime.sendMessage(message);
+        chrome.runtime.sendMessage(userMessage);
         if (document.getElementById('assistant-info-wrapper')) {
             hideAssistanInfo();
         }
@@ -218,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
         chatMessages.appendChild(messageElement);
 
         // enable the clear chat button
-        checkClearChatBtn();
+       // checkClearChatBtn();
 
         // scroll to the displayed message in the chat-messages div
         messageElement.scrollIntoView();
@@ -256,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // fucntion to check if the clear chat button should be enabled or disabled
-    function checkClearChatBtn() {
+    /* function checkClearChatBtn() {
         chrome.storage.local.get(['chatHistory'], function (result) {
             const chatHistory = result.chatHistory || [];
             if (chatHistory.length > 0) {
@@ -265,10 +269,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 clearChatBtn.disabled = true;
             }
         });
-    }
+    }*/
 
     // Clear the chat history when the clear chat button is clicked
-    clearChatBtn.addEventListener('click', function () {
+    /*clearChatBtn.addEventListener('click', function () {
         // Display a confirmation popup
         const isConfirmed = window.confirm('Are you sure you want to clear the chat history?');
 
@@ -282,15 +286,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 displayAssistanInfo();
             });
         }
-    });
+    });*/
 
     // Settings button click event
-    document.getElementById('settings-btn').addEventListener('click', function () {
+    /*document.getElementById('settings-btn').addEventListener('click', function () {
         chrome.runtime.openOptionsPage();
-    });
+    });*/
 
     // Open the dropdown when the button is clicked
-    document.getElementById("model-dropdown-btn").addEventListener("click", function () {
+    /*document.getElementById("model-dropdown-btn").addEventListener("click", function () {
         var dropdownContent = document.getElementById("model-dropdown-content");
 
         // Toggle the display property
@@ -298,11 +302,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Add active class to the button if the dropdown is open
         document.getElementById("model-dropdown-btn").classList.toggle("active", dropdownContent.style.display === "flex");
-    });
+    });*/
 
 
     // Close the dropdown if the user clicks outside of it
-    window.addEventListener("click", function (event) {
+  /*  window.addEventListener("click", function (event) {
         if (!event.target.matches('#model-dropdown-btn')) {
             var dropdownContent = document.getElementById("model-dropdown-content");
             if (dropdownContent.style.display === "flex") {
@@ -311,7 +315,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // remove active class from the button if the dropdown is closed
             document.getElementById("model-dropdown-btn").classList.remove("active");
         }
-    });
+    });*/
 
     // Handle button clicks in the dropdown
     var dropdownButtons = document.querySelectorAll(".model-dropdown-btn");
@@ -340,7 +344,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById(model).classList.add("active");
     }
 
-    // Set the active model when the popup is opened
+    /* // Set the active model when the popup is opened
     chrome.storage.local.get(['apiModel'], function (result) {
         if (result.apiModel) {
             // Update the text on the main button
@@ -348,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Set active model in the dropdown
             setActiveModel(result.apiModel);
         }
-    });
+    });*/
 
     function displayAssistanInfo() {
         // Create a div element for the message
